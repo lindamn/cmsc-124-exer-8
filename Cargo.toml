@@ -1,0 +1,7 @@
+[package]
+name = "penaranda_ex08"
+version = "0.0.1"
+author = ["Lindsay Anne Penaranda"]
+
+[dependencies]
+regex = "0.1"
