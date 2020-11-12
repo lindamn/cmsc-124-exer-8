@@ -28,14 +28,15 @@ fn main(){
     let mut num_vec = Vec::new();
     let mut str_vec = Vec::new();
     let mut nonkey_vec = Vec::new();
-    let key_re = Regex::new(r"^[A-Z]+$").unwrap();//to match keywords
-    let num_re = Regex::new(r"^[-]?\d+").unwrap();//to match numbers/integers
-    let str_re = Regex::new(r#"^".+"$"#).unwrap();//to match strings
-    let nonkey_re = Regex::new(r"[a-z0-9]+").unwrap();//to match identifiers
+    let key_re = Regex::new(r#"^[A-Z]+$"#).unwrap();//to match keywords
+    let num_re = Regex::new(r"\b-?\d+\b").unwrap();//to match numbers/integers
+    let str_re = Regex::new(r#"^".*"$"#).unwrap();//to match strings
+    let nonkey_re = Regex::new(r#"\b[a-z0-9]+\b"#).unwrap();//to match identifiers
     
     let re = Regex::new(r"IT'S SHOWTIME|YOU HAVE BEEN TERMINATED|TALK TO THE HAND .+|HEY CHRISTMAS TREE .+|YOU SET US UP .+|GET TO THE CHOPPER .+|HERE IS MY INVITATION.+|GET UP .+|GET DOWN .+|YOU'RE FIRED .+|HE HAD TO SPLIT .+|YOU ARE NOT YOU YOU ARE ME .+|LET OFF SOME STEAM BENNET .+|CONSIDER THAT A DIVORCE .+|KNOCK KNOCK .+|ENOUGH TALK").unwrap();
     for cap in re.captures_iter(&mut s){
         let mut token = cap.at(0).unwrap_or("");
+        // println!("token: {}", token);
         let re2 = Regex::new(r#"(?P<k>[A-Z'\s]+) (?P<v>.+$)"#).unwrap();//splits the string into keyword and value
         for cap2 in re2.captures_iter(&mut token){
             let mut key = cap2.name("k").unwrap_or("").to_owned();
@@ -44,14 +45,14 @@ fn main(){
                 key.push_str(" ");
                 key.push_str(&value);
                 key_vec.push(key);
-            }else if num_re.is_match(&value){
+            }else if num_re.is_match(&value){ //if value is number/integer
                 num_vec.push(value);
                 key_vec.push(key);
-            }else if str_re.is_match(&value){
+            }else if str_re.is_match(&value){ // if value is string
                 value.retain(|c| c != '"');//removes the double quotes
                 str_vec.push(value);
                 key_vec.push(key);
-            }else if nonkey_re.is_match(&value){
+            }else if nonkey_re.is_match(&value){ //if value is identifier na hindi keyword
                 nonkey_vec.push(value);
                 key_vec.push(key);
             };
